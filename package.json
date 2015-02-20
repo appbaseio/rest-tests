@@ -1,0 +1,8 @@
+{
+  "version": "0.0.1",
+  "name": "rest-tests",
+  "author": "Sagar",
+  "scripts": {
+    "test": "mocha main.js --check-leaks"
+  }
+}
