@@ -15,9 +15,9 @@ module.exports = {
   },
   tests: [
     {
-      description: "Fetch obj",
+      description: "Fetch Document",
       req: {
-        url: "/user/sagar/~properties",
+        url: "/Materials/Ice/~properties",
         method: "post",
         body: {
           all: true
@@ -27,17 +27,11 @@ module.exports = {
         code: 200,
         body: {
           "vertex": {
-            "_id": "string",
-            "timestamp": "number",
-            "rootPath": "user/sagar"
+            "_id": String,
+            "timestamp": Number,
+            "rootPath": "Materials/Ice"
           },
           "optype": "RETR"
-        },
-        exactMatch: {
-          vertex: {
-            rootPath: true,
-          },
-          optype: true
         }
       }
     }

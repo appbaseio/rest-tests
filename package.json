@@ -4,5 +4,9 @@
   "author": "Sagar",
   "scripts": {
     "test": "mocha main.js --check-leaks"
+  },
+  "dependencies": {
+    "chai": "^2.0.0",
+    "mocha": "^2.1.0"
   }
 }

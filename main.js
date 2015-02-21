@@ -22,12 +22,14 @@ var flattenObj = function(ob) {
 	return toReturn;
 };
 
-//converts body to a testble one
-var convertBody = function(body, exactMatch) {
-  for(var prop in body) {
-    if(exactMatch[prop] !== true) body[prop] = typeof body[prop];
+//converts body and expected-body to comparable ones
+var convertObjects = function(body, expected) {
+  for(var prop in expected) {
+    if(typeof expected[prop] === "function") {
+      expected[prop] = typeof expected[prop]();
+      body[prop] = typeof body[prop];
+    }
   }
-  return body;
 }
 
 
@@ -57,12 +59,12 @@ var test = function(testObj) {
 
     //expect body
     req.expect(function(res) {
-      //convert body to a testable one
       expect(res.body).to.be.an('object');
-      var body = convertBody(flattenObj(res.body), flattenObj(testObj.res.exactMatch));
-
-      //flatten expected-body, so that it is comparable to body
+      
+      //convert bodies to a testable ones
+      var body = flattenObj(res.body);
       var expected = flattenObj(testObj.res.body);
+      convertObjects(body, expected);
       
       //check
       expect(body).to.deep.equal(expected);
