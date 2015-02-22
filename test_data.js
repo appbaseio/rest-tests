@@ -1,6 +1,6 @@
 module.exports = {
   global : {
-    base: "http://api.appbase.io/rest_test/v3",
+    base: "http://ec2-52-1-50-223.compute-1.amazonaws.com:8080/rest_test/v3",
     req: {
       headers: { // request headers
         "appbase-secret": "193dc4d2440146082ea734f36f4f2638",
@@ -106,7 +106,7 @@ module.exports = {
       }
     },
     {
-      description: "Fetching Non-existent document",
+      description: "Operating on a Non-existent document",
       req: {
         url: "/user/laura",
         method: "delete"
@@ -120,9 +120,36 @@ module.exports = {
       }
     },
     {
+      description: "Create a new collection",
+      req: {
+        url: "/tweet",
+        method: "patch"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_collection": "tweet",
+          "_created": true //if newly created
+        }
+      }
+    },
+    {
+      description: "Patch an existing collection",
+      req: {
+        url: "/tweet",
+        method: "patch"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_collection": "tweet"
+        }
+      }
+    },
+    {
       description: "Push a JSON without an _id in the collection",
       req: {
-        url: "/user",
+        url: "/tweet",
         method: "post",
         body: {
           "bar": "foo"
@@ -132,29 +159,71 @@ module.exports = {
         code: 200,
         body: {
           "_id": String,
-          "_collection": "user",
+          "_collection": "tweet",
           "_timestamp": Number,
           "bar": "foo"
         }
       }
     },
     {
-      description: "Push a JSON with an _id in the collection ",
+      description: "Push a JSON with an _id in the collection",
       req: {
-        url: "/user",
+        url: "/tweet",
         method: "post",
         body: {
-          "_id": "laura",
+          "_id": "tweet1",
           "bar": "foo"
         }
       },
       res: {
         code: 200,
         body: {
-          "_id": "laura",
-          "_collection": "user",
+          "_id": "tweet1",
+          "_collection": "tweet",
           "_timestamp": Number,
           "bar": "foo"
+        }
+      }
+    },
+    {
+      description: "Delete a collection",
+      req: {
+        url: "/tweet",
+        method: "delete"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_collection": "tweet",
+          "_deleted": true
+        }
+      }
+    },
+    {
+      description: "Trying to delete a non-existent collection",
+      req: {
+        url: "/tweet",
+        method: "delete"
+      },
+      res: {
+        code: 404,
+        body: {
+          error: Number,
+          message: String
+        }
+      }
+    },
+    {
+      description: "Fetching a document form a non-existent collection",
+      req: {
+        url: "/tweet/tweet1",
+        method: "get"
+      },
+      res: {
+        code: 404,
+        body: {
+          error: Number,
+          message: String
         }
       }
     }
