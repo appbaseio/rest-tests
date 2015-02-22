@@ -12,11 +12,6 @@ supertest.Test.prototype.assert = function(res, callback) {
   });
 }
 
-//print in blue
-var blue = function(str) {
-  console.log(chalk.blue(str));
-}
-
 //flattens nested JSON objects to a single-depth one
 var flattenObj = function(ob) {
 	var toReturn = {};
@@ -112,15 +107,16 @@ var test = function(testObj) {
     //end
     req.end(function(error, res) {
       if(error) {
-        blue("Status: " + res.status);
-        blue("Headers: " + JSON.stringify(res.headers, null, 2));
-        blue("Body/Text: " + ((!isEmpty(res.body))? JSON.stringify(res.body, null, 2) : res.text.slice(0, 100)));
+        //append response
+        error.message += chalk.blue("\nStatus: " + res.status);
+        error.message += chalk.blue("\nHeaders: " + JSON.stringify(res.headers, null, 2));
+        error.message += chalk.blue("\nBody/Text: " + (isEmpty(res.body)? res.text.slice(0, 100) : JSON.stringify(res.body, null, 2)));
       }
       done(error);
     });
   })
 }
 
-describe("Rest API tests. Base: " + test_data.global.base, function() {
+describe("", function() {
   test_data.tests.forEach(test);
 })
