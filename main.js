@@ -1,6 +1,22 @@
 var expect = require('chai').expect;
 var test_data = require('./test_data.js');
-var api = require('supertest')(test_data.global.base);
+var supertest = require('supertest');
+var api = supertest(test_data.global.base);
+var chalk = require('chalk');
+
+// modifying supertest for returning response everytime
+supertest.Test.prototype.assertOriginal = supertest.Test.prototype.assert;
+supertest.Test.prototype.assert = function(res, callback) {
+  this.assertOriginal(res, function(err, r) {
+    callback(err, r === undefined? res : r);
+  });
+}
+
+//print in blue
+var blue = function(str) {
+  console.log(chalk.blue(str));
+}
+
 //flattens nested JSON objects to a single-depth one
 var flattenObj = function(ob) {
 	var toReturn = {};
@@ -31,6 +47,29 @@ var convertObjects = function(body, expected) {
     }
   }
 }
+
+//if object is empty
+function isEmpty(obj) {
+
+    // null and undefined are "empty"
+    if (obj == null) return true;
+
+    // Assume if it has a length property with a non-zero value
+    // that that property is correct.
+    if (obj.length > 0)    return false;
+    if (obj.length === 0)  return true;
+
+    // Otherwise, does it have any properties of its own?
+    // Note that this doesn't handle
+    // toString and valueOf enumeration bugs in IE < 9
+    var hasOwnProperty = Object.prototype.hasOwnProperty;
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
+
+    return true;
+}
+
 
 
 //test for each test-obj
@@ -71,8 +110,14 @@ var test = function(testObj) {
     })
     
     //end
-    req.end(done);
-  
+    req.end(function(error, res) {
+      if(error) {
+        blue("Status: " + res.status);
+        blue("Headers: " + JSON.stringify(res.headers, null, 2));
+        blue("Body/Text: " + ((!isEmpty(res.body))? JSON.stringify(res.body, null, 2) : res.text.slice(0, 100)));
+      }
+      done(error);
+    });
   })
 }
 
