@@ -76,7 +76,7 @@ var test = function(testObj) {
 
     //req headers
     for(var header in test_data.global.req.headers) {
-      req.set(header, test_data.global.req.headers[header]);
+      req.set(header, testObj.req.headers && testObj.req.headers[header] ? testObj.req.headers[header]: test_data.global.req.headers[header]);
     }
 
     //req data
@@ -85,7 +85,7 @@ var test = function(testObj) {
 
     //expect reponse headers
     for(var header in test_data.global.res.headers) {
-      req.expect(header, test_data.global.res.headers[header]);
+      req.expect(header, testObj.res.headers && testObj.res.headers[header] ? testObj.res.headers[header]: test_data.global.res.headers[header]);
     }
 
     //expect status code
@@ -106,7 +106,7 @@ var test = function(testObj) {
     
     //end
     req.end(function(error, res) {
-      if(error) {
+      if(error && res) {
         //append response
         error.message += chalk.blue("\nStatus: " + res.status);
         error.message += chalk.blue("\nHeaders: " + JSON.stringify(res.headers, null, 2));
