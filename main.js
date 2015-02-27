@@ -69,8 +69,7 @@ function isEmpty(obj) {
 
 //test for each test-obj
 var test = function(testObj) {
-  
-  it(testObj.req.method + ': ' + testObj.req.url + (testObj.description !== undefined? " - " + testObj.description + "." : ""), function(done) {
+  var tester = function(done) {
     //req method and url
     var req = api[testObj.req.method](testObj.req.url);
 
@@ -114,7 +113,15 @@ var test = function(testObj) {
       }
       done(error);
     });
-  })
+  }
+  
+  if(testObj.skip) {
+    it.skip(testObj.req.method + ': ' + testObj.req.url + (testObj.description !== undefined? " - " + testObj.description + "." : ""), tester);
+  } else {
+    it(testObj.req.method + ': ' + testObj.req.url + (testObj.description !== undefined? " - " + testObj.description + "." : ""), tester);
+  }
+  
+  
 }
 
 describe("", function() {

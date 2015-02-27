@@ -15,6 +15,20 @@ module.exports = {
   },
   tests: [
     {
+      description: "Create a new collection",
+      req: {
+        url: "/user",
+        method: "patch"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_collection": "user",
+          "_created": true //if newly created
+        }
+      }
+    },
+    {
       description: "Create/Update Document",
       req: { // request to perform
         url: "/user/laura",
@@ -32,6 +46,7 @@ module.exports = {
       }
     },
     {
+      skip: true,
       description: "Patch Nested Document",
       req: {
         url: "/user/laura",
@@ -114,8 +129,22 @@ module.exports = {
       res: {
         code: 404,
         body: {
-          error: Number,
+          //error: Number,
           message: String
+        }
+      }
+    },
+    {
+      description: "Create a new collection",
+      req: {
+        url: "/user",
+        method: "delete"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_collection": "user",
+          "_deleted": true
         }
       }
     },
@@ -208,7 +237,7 @@ module.exports = {
       res: {
         code: 404,
         body: {
-          error: Number,
+          //error: Number,
           message: String
         }
       }
@@ -222,7 +251,7 @@ module.exports = {
       res: {
         code: 404,
         body: {
-          error: Number,
+          //error: Number,
           message: String
         }
       }
