@@ -15,25 +15,13 @@ module.exports = {
   },
   tests: [
     {
-      description: "Create a new collection",
-      req: {
-        url: "/user",
-        method: "patch"
-      },
-      res: {
-        code: 200,
-        body: {
-          "_collection": "user",
-          "_created": true //if newly created
-        }
-      }
-    },
-    {
-      description: "Create/Update Document",
+      description: "Create/Update Document without creating a collection, as this should work",
       req: { // request to perform
         url: "/user/laura",
         method: "patch",
-        "foo": "bar"
+        body: {
+          "foo": "bar"
+        }
       },
       res: { //expected response
         code: 200,
@@ -42,6 +30,24 @@ module.exports = {
           "_collection": "user",
           "_timestamp": Number, // could be any number
           "foo": "bar"
+        }
+      }
+    },
+    {
+      description: "Global endpoint",
+      req: {
+        url: "/",
+        method: "get"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_time": {
+            "_timestamp": Number,
+            "_timezone": "UTC",
+            "_ISOString": String,
+          },
+          _collections: ["user"]
         }
       }
     },
@@ -135,6 +141,21 @@ module.exports = {
       }
     },
     {
+      description: "Delete a collection",
+      req: {
+        url: "/user",
+        method: "delete"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_collection": "user",
+          "_deleted": true,
+          "_createdAt": Number
+        }
+      }
+    },
+    {
       description: "Create a new collection",
       req: {
         url: "/user",
@@ -176,7 +197,7 @@ module.exports = {
       }
     },
     {
-      description: "Push a JSON without an _id in the collection",
+      description: "Push a JSON in the collection",
       req: {
         url: "/tweet",
         method: "post",
@@ -203,6 +224,22 @@ module.exports = {
           "_id": "tweet1",
           "bar": "foo"
         }
+      },
+      res: {
+        code: 200,
+        body: {
+          "_id": "tweet1",
+          "_collection": "tweet",
+          "_timestamp": Number,
+          "bar": "foo"
+        }
+      }
+    },
+    {
+      description: "Fetching a document created with _id via POST",
+      req: {
+        url: "/tweet/tweet1",
+        method: "get"
       },
       res: {
         code: 200,
