@@ -161,6 +161,24 @@ module.exports = {
       }
     },
     {
+      description: "Get collection",
+      req: {
+        url: "/user",
+        method: "get"
+      },
+      res: {
+        code: 200,
+        body: {
+          "laura": {
+            "_id": "laura",
+            "_collection": "user",
+            "_timestamp": Number,
+            "bar": "foo"
+          }
+        }
+      }
+    },
+    {
       description: "Create a new collection",
       req: {
         url: "/tweet",
@@ -188,25 +206,6 @@ module.exports = {
       }
     },
     {
-      description: "Push a JSON in the collection",
-      req: {
-        url: "/tweet",
-        method: "put",
-        body: {
-          "bar": "foo"
-        }
-      },
-      res: {
-        code: 200,
-        body: {
-          "_id": String,
-          "_collection": "tweet",
-          "_timestamp": Number,
-          "bar": "foo"
-        }
-      }
-    },
-    {
       description: "Push a JSON with an _id in the collection",
       req: {
         url: "/tweet",
@@ -219,10 +218,12 @@ module.exports = {
       res: {
         code: 200,
         body: {
-          "_id": "tweet1",
-          "_collection": "tweet",
-          "_timestamp": Number,
-          "bar": "foo"
+          "tweet1" : {
+            "_id": "tweet1",
+            "_collection": "tweet",
+            "_timestamp": Number,
+            "bar": "foo"
+          }
         }
       }
     },
@@ -372,6 +373,22 @@ module.exports = {
       }
     },
     {
+      description: "Get the document w/o references",
+      req: {
+        url: "/user/laura?references=false",
+        method: "get"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_id": "laura",
+          "_collection": "user",
+          "_timestamp": Number,
+          "bar": "foo"
+        }
+      }
+    },
+    {
       description: "Remove a reference",
       req: {
         url: "/user/laura",
@@ -421,6 +438,170 @@ module.exports = {
       }
     },
     {
+      description: "Create a Document on a deeper path, collection provided inside the document",
+      req: { // request to perform
+        url: "/user/laura/tw",
+        method: "patch",
+        body: {
+          "_collection": "tweet",
+          "foo": "bar"
+        }
+      },
+      res: { //expected response
+        code: 200,
+        body: {
+          "_id": String, // random id generated
+          "_collection": "tweet",
+          "_timestamp": Number,
+          "foo": "bar"
+        }
+      }
+    },
+    {
+      description: "Get the newly created deeper document",
+      req: {
+        url: "/user/laura/tw",
+        method: "get"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_id": String,
+          "_collection": "tweet",
+          "_timestamp": Number,
+          "foo": "bar"
+        }
+      }
+    },
+    {
+      description: "Create a Document on a deeper path, with an _id",
+      req: { // request to perform
+        url: "/user/laura/tw2",
+        method: "patch",
+        body: {
+          "_id": "lookAtTheStars", 
+          "_collection": "tweet",
+          "foo": "bar"
+        }
+      },
+      res: { //expected response
+        code: 200,
+        body: {
+          "_id": "lookAtTheStars",
+          "_collection": "tweet",
+          "_timestamp": Number,
+          "foo": "bar"
+        }
+      }
+    },
+    {
+      description: "Get the newly created deeper document",
+      req: {
+        url: "/user/laura/tw2",
+        method: "get"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_id": "lookAtTheStars",
+          "_collection": "tweet",
+          "_timestamp": Number,
+          "foo": "bar"
+        }
+      }
+    },
+    {
+      description: "Get the newly created deeper document, from its own collection",
+      req: {
+        url: "/tweet/lookAtTheStars",
+        method: "get"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_id": "lookAtTheStars",
+          "_collection": "tweet",
+          "_timestamp": Number,
+          "foo": "bar"
+        }
+      }
+    },
+    {
+      description: "provide an object inside a reference",
+      req: { // request to perform
+        url: "/user/laura",
+        method: "patch",
+        body: {
+          "/tw3" : {
+            "_id": "lookHowTheyShine", 
+            "_collection": "tweet",
+            "foo": "bar"
+          }
+        }
+      },
+      res: { //expected response
+        code: 200,
+        body: {
+          "/tw3" : {
+            "_id": "lookHowTheyShine", 
+            "_collection": "tweet",
+            "_timestamp": Number,
+            "foo": "bar"
+          }
+        }
+      }
+    },
+    {
+      description: "Get the newly created deeper document",
+      req: {
+        url: "/user/laura/tw3",
+        method: "get"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_id": "lookHowTheyShine",
+          "_collection": "tweet",
+          "_timestamp": Number,
+          "foo": "bar"
+        }
+      }
+    },
+    {
+      description: "Get the document with new references",
+      req: {
+        url: "/user/laura",
+        method: "get"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_id": "laura",
+          "_collection": "user",
+          "_timestamp": Number,
+          "bar": "foo",
+          "/tw": {
+            "_id": String,
+            "_collection": "tweet",
+            "_timestamp": Number,
+            "foo": "bar"
+          },
+          "/tw2": {
+            "_id": "lookAtTheStars",
+            "_collection": "tweet",
+            "_timestamp": Number,
+            "foo": "bar"
+          },
+          "/tw3" : {
+            "_id": "lookHowTheyShine", 
+            "_collection": "tweet",
+            "_timestamp": Number,
+            "foo": "bar"
+          }
+        }
+      }
+    },
+    {
       description: "Delete a collection",
       req: {
         url: "/tweet",
@@ -459,6 +640,22 @@ module.exports = {
         body: {
           //error: Number,
           message: String
+        }
+      }
+    },
+    {
+      description: "Get the document with references from collection, which just got deleted",
+      req: {
+        url: "/user/laura",
+        method: "get"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_id": "laura",
+          "_collection": "user",
+          "_timestamp": Number,
+          "bar": "foo"
         }
       }
     },
