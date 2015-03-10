@@ -179,6 +179,48 @@ module.exports = {
       }
     },
     {
+      description: "Query",
+      req: {
+        url: "/user",
+        method: "post",
+        body: {
+          query: {
+            match_all: {}
+          }
+        }
+      },
+      res: {
+        code: 200,
+        body: {
+            "took": Number,
+            "timed_out": false,
+            "_shards": {
+              "total": Number,
+              "successful": Number,
+              "failed": 0
+            },
+            "hits": {
+              "total": 1,
+              "max_score": Number,
+              "hits": [
+                {
+                  "_index": String,
+                  "_type": "user",
+                  "_id": "laura",
+                  "_score": Number,
+                  "_source": {
+                    "_id": "laura",
+                    "_collection": "user",
+                    "_timestamp": Number,
+                    "bar": "foo"
+                  }
+                }
+              ]
+            }
+        }
+      }
+    },
+    {
       description: "Create a new collection",
       req: {
         url: "/tweet",
@@ -369,6 +411,48 @@ module.exports = {
             "_timestamp": Number,
             "bar": "foo"
           }
+        }
+      }
+    },
+    {
+      description: "Query",
+      req: {
+        url: "/user/laura",
+        method: "post",
+        body: {
+          query: {
+            match_all: {}
+          }
+        }
+      },
+      res: {
+        code: 200,
+        body: {
+            "took": Number,
+            "timed_out": false,
+            "_shards": {
+              "total": Number,
+              "successful": Number,
+              "failed": 0
+            },
+            "hits": {
+              "total": 1,
+              "max_score": Number,
+              "hits": [
+                {
+                  "_index": String,
+                  "_type": "tweet",
+                  "_id": "tweet1",
+                  "_score": Number,
+                  "_source": {
+                    "_id": "tweet1",
+                    "_collection": "tweet",
+                    "_timestamp": Number,
+                    "bar": "foo"
+                  }
+                }
+              ]
+            }
         }
       }
     },
