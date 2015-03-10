@@ -142,6 +142,25 @@ module.exports = {
       }
     },
     {
+      description: "Method overriding",
+      req: {
+        headers: {
+          "http-method-override": "get" 
+        },
+        url: "/user/laura",
+        method: "post"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_id": "laura",
+          "_collection": "user",
+          "_timestamp": Number,
+          "bar": "foo"
+        }
+      }
+    },
+    {
       description: "Create a new collection",
       req: {
         url: "/tweet",
