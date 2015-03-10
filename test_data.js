@@ -15,7 +15,21 @@ module.exports = {
   },
   tests: [
     {
-      description: "Create/Update Document without creating a collection, as this should work",
+      description: "Create a new collection",
+      req: {
+        url: "/user",
+        method: "patch"
+      },
+      res: {
+        code: 200,
+        body: {
+          "_collection": "user",
+          "_created": true //if newly created
+        }
+      }
+    },
+    {
+      description: "Create/Update Document",
       req: { // request to perform
         url: "/user/laura",
         method: "patch",
@@ -158,7 +172,7 @@ module.exports = {
       description: "Push a JSON in the collection",
       req: {
         url: "/tweet",
-        method: "post",
+        method: "put",
         body: {
           "bar": "foo"
         }
@@ -177,7 +191,7 @@ module.exports = {
       description: "Push a JSON with an _id in the collection",
       req: {
         url: "/tweet",
-        method: "post",
+        method: "put",
         body: {
           "_id": "tweet1",
           "bar": "foo"
@@ -194,7 +208,7 @@ module.exports = {
       }
     },
     {
-      description: "Fetching a document created with _id via POST",
+      description: "Fetching a document created with _id via put",
       req: {
         url: "/tweet/tweet1",
         method: "get"
