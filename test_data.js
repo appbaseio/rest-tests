@@ -482,9 +482,11 @@ module.exports = {
       res: {
         code: 200, 
         body: {
+          "_id": "laura",
+          "_collection": "user",
+          "_timestamp": Number,
           "/tweet": {
-            "_deleted": true,
-            "_timestamp": Number
+            "_deleted": true
           }
         }
       }
