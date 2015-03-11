@@ -1,6 +1,6 @@
 module.exports = {
   global : {
-    base: "http://ec2-52-1-50-223.compute-1.amazonaws.com:8080/rest_test/v3",
+    base: "http://localhost:8080/rest_test/v3",
     req: {
       headers: { // request headers
         "appbase-secret": "193dc4d2440146082ea734f36f4f2638",
@@ -23,8 +23,7 @@ module.exports = {
       res: {
         code: 200,
         body: {
-          "_collection": "user",
-          "_created": true //if newly created
+          "_collection": "user"
         }
       }
     },
@@ -142,6 +141,7 @@ module.exports = {
       }
     },
     {
+      skip: true,
       description: "Method overriding",
       req: {
         headers: {
@@ -179,6 +179,7 @@ module.exports = {
       }
     },
     {
+      skip: true,
       description: "Query",
       req: {
         url: "/user",
@@ -229,8 +230,7 @@ module.exports = {
       res: {
         code: 200,
         body: {
-          "_collection": "tweet",
-          "_created": true //if newly created
+          "_collection": "tweet"
         }
       }
     },
@@ -241,9 +241,10 @@ module.exports = {
         method: "patch"
       },
       res: {
-        code: 200,
+        code: 400, 
         body: {
-          "_collection": "tweet"
+          //error: Number,
+          message: String
         }
       }
     },
@@ -260,12 +261,10 @@ module.exports = {
       res: {
         code: 200,
         body: {
-          "tweet1" : {
-            "_id": "tweet1",
-            "_collection": "tweet",
-            "_timestamp": Number,
-            "bar": "foo"
-          }
+          "_id": "tweet1",
+          "_collection": "tweet",
+          "_timestamp": Number,
+          "bar": "foo"
         }
       }
     },
@@ -302,9 +301,7 @@ module.exports = {
           "_timestamp": Number,
           "/tweet": {
             "_id": "tweet1",
-            "_collection": "tweet",
-            "_timestamp": Number,
-            "bar": "foo"
+            "_collection": "tweet"
           }
         }
       }
@@ -319,7 +316,7 @@ module.exports = {
         }
       },
       res: {
-        code: 400, 
+        code: 404, 
         body: {
           //error: Number,
           message: String
@@ -385,7 +382,7 @@ module.exports = {
         method: "get"
       },
       res: {
-        code: 400,
+        code: 404,
         body: {
           //error: Number,
           message: String
@@ -415,6 +412,7 @@ module.exports = {
       }
     },
     {
+      skip: true,
       description: "Query",
       req: {
         url: "/user/laura",
@@ -484,10 +482,10 @@ module.exports = {
       res: {
         code: 200, 
         body: {
-          "_id": "laura",
-          "_collection": "user",
-          "_timestamp": Number,
-          "/tweet": null
+          "/tweet": {
+            "_deleted": true,
+            "_timestamp": Number
+          }
         }
       }
     },
@@ -514,7 +512,7 @@ module.exports = {
         method: "get"
       },
       res: {
-        code: 400,
+        code: 404,
         body: {
           //error: Number,
           message: String
@@ -558,6 +556,7 @@ module.exports = {
       }
     },
     {
+      skip: true,
       description: "Create a Document on a deeper path, with an _id",
       req: { // request to perform
         url: "/user/laura/tw2",
@@ -579,6 +578,7 @@ module.exports = {
       }
     },
     {
+      skip: true,
       description: "Get the newly created deeper document",
       req: {
         url: "/user/laura/tw2",
@@ -595,6 +595,7 @@ module.exports = {
       }
     },
     {
+      skip: true,
       description: "Get the newly created deeper document, from its own collection",
       req: {
         url: "/tweet/lookAtTheStars",
@@ -603,7 +604,7 @@ module.exports = {
       res: {
         code: 200,
         body: {
-          "_id": "lookAtTheStars",
+          "_id": String,
           "_collection": "tweet",
           "_timestamp": Number,
           "foo": "bar"
@@ -617,7 +618,6 @@ module.exports = {
         method: "patch",
         body: {
           "/tw3" : {
-            "_id": "lookHowTheyShine", 
             "_collection": "tweet",
             "foo": "bar"
           }
@@ -626,8 +626,11 @@ module.exports = {
       res: { //expected response
         code: 200,
         body: {
+          "_collection": "user",
+          "_id": "laura",
+          "_timestamp": Number,
           "/tw3" : {
-            "_id": "lookHowTheyShine", 
+            "_id": String, 
             "_collection": "tweet",
             "_timestamp": Number,
             "foo": "bar"
@@ -644,7 +647,7 @@ module.exports = {
       res: {
         code: 200,
         body: {
-          "_id": "lookHowTheyShine",
+          "_id": String,
           "_collection": "tweet",
           "_timestamp": Number,
           "foo": "bar"
@@ -670,14 +673,17 @@ module.exports = {
             "_timestamp": Number,
             "foo": "bar"
           },
-          "/tw2": {
-            "_id": "lookAtTheStars",
-            "_collection": "tweet",
+/*          "/tw2": {
             "_timestamp": Number,
-            "foo": "bar"
-          },
+            "_json": {
+              "_id": String,
+              "_collection": "tweet",
+              "_timestamp": Number,
+              "foo": "bar"
+            }
+          },*/
           "/tw3" : {
-            "_id": "lookHowTheyShine", 
+            "_id": String, 
             "_collection": "tweet",
             "_timestamp": Number,
             "foo": "bar"
@@ -755,8 +761,7 @@ module.exports = {
           "_id": "laura",
           "_collection": "user",
           "_timestamp": Number,
-          "_deleted": true,
-          "bar": "foo"
+          "_deleted": true
         }
       }
     },
@@ -784,8 +789,7 @@ module.exports = {
         code: 200,
         body: {
           "_collection": "user",
-          "_deleted": true,
-          "_createdAt": Number
+          "_deleted": true
         }
       }
     },
